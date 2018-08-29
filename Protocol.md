@@ -76,7 +76,7 @@ Response<br>
 --- description - Tag, formatted like a tellraw nbt tag.<br>
 --- favicon - String, the icon that shows up on the server. It is a data URL, containing the image's contents encoded in base 64.<br>
 
-**Ping**
+**Ping**<br>
 The Ping packet is a bidirectional packet that the server echoes back to the client. Its id is 0x01 both directions.
 
 Field Name   | Type   | Notes
