@@ -26,7 +26,22 @@ First, each frame begins with a varint that signifies the entire length of the f
 This varint contains both the length of the `Packet ID` and the length of the `Packet Data`.
 
 Field Name  | Type
------------ |-------
+----------- | -------
 Length      | varint
 Packet ID   | varint
 Packet Data | varies
+
+Handshake Packets
+-----------------
+
+The Handshake protocol is the initial protocol. Its one packet specifies which protocol to switch to.
+
+**Handshake**<br>
+The Handshake packet is the first packet, which gets sent from the client to the server. Its packet data format is as follows:
+
+Field Name         | Type   | Notes
+---------------    | ------ | ------
+Protocol Version   | varint | Each version has a number that is not related to the Minecraft version name.
+Host               | String | This is how BungeeCord detects a host for forced hosts.
+Port               | varint | 
+Requested Protocol | varint | Protocol 1 is the Status protocol, and protocol 2 is the Login protocol.
