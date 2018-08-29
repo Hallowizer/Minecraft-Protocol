@@ -82,3 +82,47 @@ The Ping packet is a bidirectional packet that the server echoes back to the cli
 Field Name   | Type   | Notes
 ------------ | ------ | -------
 Time         | Long   | The time that the packet was sent to the server.
+
+Login Packets
+-------------
+
+The Login protocol is the protocol that is used when joining the server.
+
+**Login Request**<br>
+The Login Request packet is the first packet sent after the Handshake. Its id is 0x00, and it is sent to the server.
+
+Field Name  | Type   | Notes
+----------- | ------ | -------
+Username    | String | This username will be passed to the session server to verify that the player has logged in.
+
+**Encryption Request**<br>
+The Encryption Request packet is sent to the client when it receives the login request if it is in online mode. Its id is 0x01. When the client receives this packet, it notifies the Mojang session server that it is joining the server.
+
+Field Name   | Type       | Notes
+-----------  | ---------- | ------
+Server ID    | String     | The client uses this id to tell the session server it joined the server. It is recommended to change this id every time.
+Public Key   | Byte Array | This public key is for the client to encrypt the main key.
+Verify Token | Byte Array | This token should be stored for handling the response.
+
+**Encryption Response**<br>
+The Encryption Response packet is sent to the server in response to the Encryption Request. Its id is 0x01. When the server receives this packet, it verifies through the Mojang session server that the client joined the server.
+
+Field Name    | Type       | Notes
+------------- | ---------- | --------
+Shared Secret | Byte Array | This is encrypted with the public key sent in the Encryption Request.
+Verify Token  | Byte Array | This is the verify token sent in the Encryption Request, but encrypted with the public key.
+
+**Set Compression**<br>
+The Set Compression packet is optionally sent to the client after the Encryption Response is received, or after the Login Request in offline mode. If this packet is not sent, then the game will proceed without compressing packets.
+
+Field Name    | Type     | Notes
+------------- | -------- | -------
+Threshold     | Varint   | This is the compression level.
+
+**Login Success**<br>
+There are three cases where the Login Success packet would be sent to the client. First, after the Set Compression packet is sent. Second, if the stream will not be compressed, then after the Encryption Response is received. Third, if the server is in offline mode, then after the Login Request is received. After this packet is sent, the protocol switches to the Game protocol.
+
+Field Name   | Type    | Notes
+------------ | ------- | ---------
+UUID         | String  | This is the player's UUID.
+Username     | String  | This should match the one sent in the Login Request.
